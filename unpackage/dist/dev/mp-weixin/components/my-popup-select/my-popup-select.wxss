@@ -1,0 +1,66 @@
+@charset "UTF-8";
+/**
+ * 你可以通过修改这些变量来定制自己的插件主题，实现自定义主题功能
+ * 建议使用scss预处理，并在插件代码中直接使用这些变量（无需 import 这个文件），方便用户通过搭积木的方式开发整体风格一致的App
+ */
+.my_popup_select .popup_view {
+  width: 100%;
+  max-height: 80vh;
+  min-height: 50vh;
+  border-radius: 0;
+}
+.my_popup_select .popup_view .itemBox {
+  margin-top: 100rpx;
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 100rpx;
+}
+.my_popup_select .popup_view .itemBox .item {
+  flex-grow: 0;
+  margin: 10rpx;
+  width: 100rpx;
+  height: 50rpx;
+  text-align: center;
+  background: #F0EFF5;
+}
+.my_popup_select .popup_view .itemBox .item.active {
+  background: red;
+  color: #FFFFFF;
+}
+.my_popup_select .popup_view .title {
+  text-align: center;
+  font-weight: bold;
+  line-height: 80rpx;
+  font-size: 30rpx;
+  width: 100%;
+  height: 80rpx;
+  position: fixed;
+  top: 0;
+  background-color: #FFFFFF;
+  border-bottom: 1px solid #E5E5E5;
+  color: #333333;
+}
+.my_popup_select .popup_view .btnBox {
+  position: fixed;
+  width: 100%;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  height: 80rpx;
+  justify-content: center;
+}
+.my_popup_select .popup_view .btnBox .btnCancel {
+  line-height: 80rpx;
+  text-align: center;
+  flex: 1;
+  background: #FFB644;
+  color: #FFFFFF;
+}
+.my_popup_select .popup_view .btnBox .btnSubmit {
+  line-height: 80rpx;
+  text-align: center;
+  flex: 1;
+  background: red;
+  color: #FFFFFF;
+}
+

@@ -1,0 +1,6 @@
+{
+  "disableScroll": true,
+  "usingComponents": {
+    "city-select": "/otherpages/components/city-select/city-select"
+  }
+}

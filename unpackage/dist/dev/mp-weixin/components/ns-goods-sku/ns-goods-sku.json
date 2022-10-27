@@ -1,0 +1,8 @@
+{
+  "component": true,
+  "usingComponents": {
+    "uni-popup": "/components/uni-popup/uni-popup-sku",
+    "ns-login": "/components/ns-login/ns-login",
+    "my-popup-select": "/components/my-popup-select/my-popup-select"
+  }
+}

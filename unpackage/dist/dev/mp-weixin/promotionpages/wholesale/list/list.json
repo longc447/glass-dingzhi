@@ -1,0 +1,8 @@
+{
+  "usingComponents": {
+    "ns-empty": "/components/ns-empty/ns-empty",
+    "loading-cover": "/components/loading-cover/loading-cover",
+    "drag-button": "/promotionpages/components/drag-button/drag-button",
+    "diy-whole-sale": "/promotionpages/components/diy-wholesale/diy-wholesale"
+  }
+}
