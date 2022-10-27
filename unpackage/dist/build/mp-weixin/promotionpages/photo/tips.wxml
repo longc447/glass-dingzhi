@@ -1,1 +1,0 @@
-<view class="viewTips"><text class="tipText">下单成功，审核后可支付</text><text data-event-opts="{{[['tap',[['e0',['$event']]]]]}}" class="btn return" bindtap="__e">返回首页</text><text data-event-opts="{{[['tap',[['to',['/pages/order/list/list?status=waitpays']]]]]}}" class="btn" bindtap="__e">查看订单</text></view>

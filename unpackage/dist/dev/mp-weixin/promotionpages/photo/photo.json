@@ -1,8 +1,0 @@
-{
-  "navigationBarTitleText": "拍照下单",
-  "enablePullDownRefresh": false,
-  "usingComponents": {
-    "diy-bottom-nav": "/components/diy-bottom-nav/diy-bottom-nav",
-    "ns-login": "/components/ns-login/ns-login"
-  }
-}

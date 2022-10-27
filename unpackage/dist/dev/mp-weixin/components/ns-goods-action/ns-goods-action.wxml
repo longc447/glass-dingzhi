@@ -1,1 +1,0 @@
-<view class="{{['ns-goods-action',(safeArea)?'bottom-safe-area':'',(isiPhone)?'iphone12':'']}}"><slot></slot></view>

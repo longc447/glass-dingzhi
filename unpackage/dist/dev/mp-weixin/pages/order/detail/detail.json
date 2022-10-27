@@ -1,9 +1,0 @@
-{
-  "enablePullDownRefresh": true,
-  "usingComponents": {
-    "sku-list": "/components/sku-list/sku-list",
-    "loading-cover": "/components/loading-cover/loading-cover",
-    "ns-payment": "/components/payment/payment",
-    "image-box": "/components/imageloader/imageloader"
-  }
-}
