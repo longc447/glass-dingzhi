@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "商户认证",
+  "enablePullDownRefresh": false,
+  "usingComponents": {
+    "pick-regions": "/components/pick-regions/pick-regions"
+  }
+}

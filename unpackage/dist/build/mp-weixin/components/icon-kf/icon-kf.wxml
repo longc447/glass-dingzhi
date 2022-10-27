@@ -1,0 +1,1 @@
+<view class="{{[t=='block'?'kf-component':'kf-line']}}"><button class="vkefu" open-type="contact" bindcontact="handleContact" session-from="sessionFrom"><text>客服</text></button><block wx:if="{{t=='block'}}"><view class="kf-style"><image src="{{kfIcon}}" mode="scaleToFill"></image></view></block></view>

@@ -116,14 +116,6 @@ image {
 .wap-floating.data-v-41feb722 .uni-popup__wrapper.uni-custom .uni-popup__wrapper-box {
   background: none !important;
 }
-
-/* .noStore-bg /deep/ .search-box {
-	background: #ffffff;
-}
-
-.noStore-bg /deep/ .single-graph {
-	background: #ffffff;
-} */
 .data-v-41feb722 .placeholder {
   height: 0;
 }

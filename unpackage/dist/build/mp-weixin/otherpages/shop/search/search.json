@@ -1,0 +1,5 @@
+{
+  "usingComponents": {
+    "diy-shop-info": "/otherpages/components/diy-shop-info/diy-shop-info"
+  }
+}

@@ -470,7 +470,6 @@ export default {
     };
   },
   onReady() {
-    // 微信公众号分享
     // #ifdef H5
     if (this.$util.isWeiXin()) {
       this.$api.sendRequest({
@@ -645,14 +644,6 @@ image {
 .wap-floating >>> .uni-popup__wrapper.uni-custom .uni-popup__wrapper-box {
   background: none !important;
 }
-
-/* .noStore-bg /deep/ .search-box {
-	background: #ffffff;
-}
-
-.noStore-bg /deep/ .single-graph {
-	background: #ffffff;
-} */
 /deep/ .placeholder {
   height: 0;
 }

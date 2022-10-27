@@ -1,0 +1,1 @@
+<view data-event-opts="{{[['tap',[['e0',['$event']]]]]}}" hidden="{{!(isShow)}}" class="imageLoader" bindtap="__e"><image src="{{url}}" mode="widthFix"></image></view>
