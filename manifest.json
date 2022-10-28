@@ -149,7 +149,8 @@
         "plugins" : {},
         "optimization" : {
             "subPackages" : true
-        }
+        },
+        "lazyCodeLoading" : "requiredComponents"
     },
     // "live-player-plugin" : {
     //     "version" : "1.2.0",
