@@ -66,8 +66,7 @@
 								<text class="price color-base-text font-size-toolbar"
 									v-if="goodsDetail.luminosity_status == 1">{{goodsDetail.luminosity_status == 1?'共计：':''}}</text>
 								<text class="unit color-base-text font-size-tag">￥</text>
-								<text class="price color-base-text font-size-toolbar"
-									v-if="goodsDetail.luminosity_status == 1">{{sumPrice || 0}}</text>
+								<text class="price color-base-text font-size-toolbar" v-if="goodsDetail.luminosity_status == 1">{{sumPrice || 0}}</text>
 								<text class="price color-base-text font-size-toolbar"
 									v-else>{{ is_wholesaler==3?goodsDetail.price_pf:goodsDetail.price  }}</text>
 							</view>
@@ -85,7 +84,10 @@
 					<view class="sku-close iconfont iconclose" @click="closeSkuPopup()"></view>
 				</view>
 				<view class="body-item">
-					<!--  class="wrap" -->
+					<view v-if="goodsDetail.machining == 1">
+						是否加工 <switch :checked="isMachining" @change="isMachining = !isMachining"/>
+					</view>
+
 					<scroll-view :scroll-y="true" style="max-height: 920rpx;" :scroll-into-view="scrollto">
 						<view class="sku-list-wrap" v-for="(item, index) in goodsDetail.goods_spec_format" :key="index"
 							v-if="goodsDetail.luminosity_status != 1">
@@ -100,9 +102,6 @@
 								<text>{{ item_value.spec_value_name }}</text>
 							</view>
 						</view>
-						<!-- <view class="sku-list-wre" v-if=" goodsDetail.photometric!=0">
-						球镜值+柱镜<=联合光度值{{photometric}}
-					</view> -->
 						<view class="wrap-transverse" v-for="(item,index) in myValue"
 							style="display: flex;flex-direction: column;" :key="index">
 							<view class="wrap-sph">
@@ -116,13 +115,6 @@
 										<view style="font-size: 3.5vw;color: rgb(120,120,120);" v-else
 											class="uni-input">{{leftArray[item.leftIndex] || ''}}</view>
 									</view>
-									<!-- 	<picker @change="bindPickerChangeF" :value="item.leftIndex" :range="leftArray"
-										class="picker-item">
-										<text style="font-size: 35rpx;color: rgb(120,120,120);"
-											v-if="leftIndex == null"></text>
-										<view style="font-size: 3.5vw;color: rgb(120,120,120);" v-else
-											class="uni-input">{{leftArray[item.leftIndex]}}</view>
-									</picker> -->
 								</view>
 								<view class="sku-list-wrap"
 									v-if="goodsDetail.photometric!=0|| goodsDetail.luminosity_status==1 ">
@@ -135,13 +127,6 @@
 											class="uni-input">{{item.ball_mirrorArray[item.ball_mirrorIndex] || ''}}
 										</view>
 									</view>
-									<!-- <picker @change="bindPickerChangeA" :value="item.ball_mirrorIndex"
-										:range="item.ball_mirrorArray" class="picker-item" style="width: 80rpx;">
-										<text style="font-size: 3.5vw;color: rgb(120,120,120);"
-											v-if="ball_mirrorIndex == null"></text>
-										<view style="font-size: 3.5vw;color: rgb(120,120,120);" v-else
-											class="uni-input">{{item.ball_mirrorArray[item.ball_mirrorIndex]}}</view>
-									</picker> -->
 								</view>
 								<view class="sku-list-wrap"
 									v-if=" goodsDetail.photometric!=0|| goodsDetail.luminosity_status==1 ">
@@ -156,14 +141,6 @@
 											{{item.cylinder_mirrorArray[item.cylinder_mirrorIndex] || ''}}
 										</view>
 									</view>
-									<!-- 	<picker @change="bindPickerChangeB" :value="item.cylinder_mirrorIndex"
-										style="width: 80rpx;" :range="item.cylinder_mirrorArray" class="picker-item">
-										<text style="font-size: 3.5vw;color: rgb(120,120,120);"
-											v-if="cylinder_mirrorIndex == null"></text>
-										<view style="font-size: 3.5vw;color: rgb(120,120,120);" v-else
-											class="uni-input">{{item.cylinder_mirrorArray[item.cylinder_mirrorIndex]}}
-										</view>
-									</picker> -->
 								</view>
 								<view class="sku-list-wrap"
 									v-if=" goodsDetail.photometric!=0|| goodsDetail.luminosity_status==1 ">
@@ -172,13 +149,6 @@
 										<input type="number" v-model="item.axisValue"
 											style="font-size: 3.5vw;color: rgb(120, 120, 120);" />
 									</view>
-									<!-- 	<picker @change="bindPickerChangeC" :value="item.axisIndex" :range="axisArray"
-										class="picker-item">
-										<text style="font-size: 3.5vw;color: rgb(120,120,120);"
-											v-if="axisIndex == null"></text>
-										<view style="font-size: 3.5vw;color: rgb(120,120,120);" v-else
-											class="uni-input">{{axisArray[item.axisIndex]}}</view>
-									</picker> -->
 								</view>
 								<view class="sku-list-wrap"
 									v-if="(goodsDetail.photometric!=0|| goodsDetail.luminosity_status==1) && goodsDetail.a_dd == 1">
@@ -190,13 +160,6 @@
 										<view style="font-size: 3.5vw;color: rgb(120,120,120);" v-else
 											class="uni-input">{{sumArray[item.sumIndex] || ''}}</view>
 									</view>
-									<!-- <picker @change="bindPickerChangeD" :value="item.sumIndex" :range="sumArray"
-										class="picker-item">
-										<text style="font-size: 3.5vw;color: rgb(120,120,120);"
-											v-if="sumIndex == null"></text>
-										<view style="font-size: 3.5vw;color: rgb(120,120,120);" v-else
-											class="uni-input">{{sumArray[item.sumIndex]}}</view>
-									</picker> -->
 								</view>
 								<view class="sku-list-wrap"
 									v-if="(goodsDetail.photometric!=0|| goodsDetail.luminosity_status==1) && goodsDetail.passage == 1 ">
@@ -207,13 +170,6 @@
 										<view style="font-size: 3.5vw;color: rgb(120,120,120);" v-else
 											class="uni-input">{{objArray[item.objIndex] || ''}}</view>
 									</view>
-									<!-- <picker @change="bindPickerChangeE" :value="item.objIndex" :range="objArray"
-										class="picker-item">
-										<text style="font-size: 3.5vw;color: rgb(120,120,120);"
-											v-if="objIndex == null"></text>
-										<view style="font-size: 3.5vw;color: rgb(120,120,120);" v-else
-											class="uni-input">{{objArray[item.objIndex]}}</view>
-									</picker> -->
 								</view>
 								<view class="sku-list-wrap"
 									v-if="goodsDetail.photometric!=0|| goodsDetail.luminosity_status==1 ">
@@ -263,7 +219,7 @@
 
 
 						<view class="add-sku" @click="getClickGoodsAdd()" :id="scrollto"
-							v-if="goodsDetail.rimless!=1&&(goodsDetail.photometric!=0|| goodsDetail.luminosity_status==1) ">
+							v-if="goodsDetail.rimless != 1 && (goodsDetail.photometric != 0 || goodsDetail.luminosity_status == 1) ">
 							<text>新增</text>
 							<!-- #ifndef MP-->
 							<text v-show="false">{{rimless=goodsDetail.rimless}}</text>
@@ -272,7 +228,18 @@
 					</scroll-view>
 					<!-- <textarea placeholder="备注留言" class="remarkBox" v-model="buyer_message"></textarea> -->
 
-
+					<!-- 加工 -->
+					<view style="display: flex;justify-content: space-evenly;" v-if="isMachining">
+						<view v-for="(item,index) in jgMap" :key="index" style="text-align:center" @click="handleClickSelectKuangxing(index)">
+							<view class="sku-list-wrap" v-if=" goodsDetail.photometric!=0|| goodsDetail.luminosity_status==1 " style="display: flex;flex-direction: column;justify-content: center;align-items: center;">
+								<text class="title font-size-base">{{item.key}}</text> 
+								<view class="picker-item" style="font-size: 3.5vw;color: rgb(120, 120, 120);">
+									<input type="text" v-model="item.name" style="font-size: 3.5vw;color: rgb(120, 120, 120);" />
+								</view>
+							</view>
+						</view>
+					</view>
+					<!-- 加工 end -->
 				</view>
 				<block v-if="type == 'wholesale_buy_now' || type == 'wholesale_join_cart'">
 					<view class="footer" @click="confirm()">
@@ -301,13 +268,14 @@
 		<my-popup-select title="ADD" ref="add" @change="bindPickerChangeD" />
 		<!-- 通道 -->
 		<my-popup-select title="通道" ref="tongdao" @change="bindPickerChangeE" />
+		<!-- 框型 -->
+		<my-popup-select title="框型" ref="kuangxing" @change="bindPickerChangekuangxing" />
 
 	</view>
 </template>
 
 <script>
 	import uniPopup from '@/components/uni-popup/uni-popup-sku.vue';
-	import htmlParser from '@/common/js/html-parser';
 	import Config from '../../common/js/config.js'
 	// 商品SKU
 	export default {
@@ -338,6 +306,34 @@
 		},
 		data() {
 			return {
+				jgPrice:"",
+				isMachining:false,
+				jgMap: [{
+					key:"框型",
+					val:"",
+					name: '',
+					list:["全框", "半框", "无框", "切边"]
+				},{
+					key:"瞳距（左）",
+					val:"",
+					name: "",
+					list:[]
+				},{
+					key:"瞳高（左）",
+					val: "",
+					name: '',
+					list:[]
+				},{
+					key:"瞳距（右）",
+					val:"",
+					name: "",
+					list:[]
+				},{
+					key:"瞳高（右）",
+					val: "",
+					name: '',
+					list:[]
+				}],//加工 功能
 				rimless: '',
 				scrollto: 'addbtn0',
 				isIphoneX: false,
@@ -353,24 +349,20 @@
 				//是否开启预览，0：不开启，1：开启
 				preview: 0,
 				cartNumber: 0, // 购物车中商品存在的数量,
-
 				leftIndex: 0, //眼球index
 				ball_mirrorIndex: 0, //球镜index
 				cylinder_mirrorIndex: 0, //柱镜index
 				axisIndex: 0, //轴位index
 				sumIndex: 0, //ADDindex
 				objIndex: 0, //通道index
-
 				leftArray: ['R', 'L'], //眼球数组
 				ball_mirrorArray: [], //球镜数组
 				cylinder_mirrorArray: [], //柱镜数组
 				ball_mirrorArray_bk: [],
 				cylinder_mirrorArray_bk: [],
 				axisArray: [], //轴位数组
-
 				sumArray: [], //add数组
 				objArray: [], //通道数组
-
 				photometric: 0, //联合光度
 				is_wholesaler: Config.is_wholesaler, //3 批发商
 				//商品数量变量
@@ -390,27 +382,13 @@
 			this.systemInfo = uni.getSystemInfoSync();
 			this.getWholesale(this.goodsDetail);
 			if (this.goodsDetail.goods_id == 0) this.$emit("error")
-			// let t = setInterval(() => {
-			// 	if (this.cylinder_mirrorArray_bk.length > 0) {
-			// 		clearInterval(t);
-			// 		this.getClickGoodsAdd();
-			// 	}
-			// }, 100)
 		},
 		watch: {
-			// rimless(nval,oval){
-			// 	//console.error(nval,oval,"rimless")
-			// },
 			pointLimit(newNum, oldNum) {
 				this.limitNumber = Number(newNum);
 			},
 			goodsDetail(newData, oldData) {
-					// this.getWholesale(newData);
 				this.goodsDetailChange(newData)
-				// if (newData.rimless == 1) {
-					console.error(this.goodsDetail,"更新了一次");
-				// }
-				
 				if (this.goodsDetail.rimless == 1) {
 					this.rimless = this.goodsDetail.rimless
 					this.getClickGoodsAdd({}, 1)
@@ -422,12 +400,17 @@
 				}
 			}
 		},
-		methods: {
+	methods: {
+			handleClickSelectKuangxing(index) {
+				const data = this.jgMap[index].list;
+				if (data.length > 0) {
+					this.$refs.kuangxing.list = data;
+					this.$refs.kuangxing.open()
+				}
+				console.log("选择框型",this.goodsDetail.machining_info)
+			},
 			goodsDetailChange(newData, oldData) {
-				//console.log(this.goodsDetail, "goodsDetailgoodsDetailgoodsDetailgoodsDetail");
-				//console.log(newData.photometric)
 				this.skuId = newData.sku_id;
-				console.error(this.goodsDetail.luminosity_status,"luminosity_status");
 				if (this.goodsDetail.luminosity_status != 1) this.setBalllist()
 				if (newData.photometric != 0 || newData.luminosity_status == 1) { //联合光度
 					//球镜范围
@@ -474,7 +457,6 @@
 					this.cylinder_mirrorArray_bk = cylinder_mirrorArray
 					this.myValue = []
 					this.getClickGoodsAdd();
-					// //console.log("柱镜", this.cylinder_mirrorArray_bk, "球镜", this.ball_mirrorArray_bk);
 					this.axisArray = axisArray
 					this.sumArray = sumArray
 					this.objArray = objArray
@@ -499,21 +481,15 @@
 					return a - b
 				})
 				
-				this.newballlist = arr
-				// //console.log(this.newballlist, "球镜数据")
+				this.newballlist = arr;
 			},
 			getSumPrice() {
 				let sum = 0
-				// //console.log(this.myValue,
-				// 	"this.goodsDetail.goods_spec_formatthis.goodsDetail.goods_spec_formatthis.goodsDetail.goods_spec_format"
-				// )
 				this.myValue.forEach(e => {
 					sum += parseFloat(e.discount_price || 0) * e.product_num
 				})
+				sum += parseFloat(this.jgPrice) || 0;
 				this.sumPrice = sum
-			},
-			nomove(e) {
-				// //console.log(e);
 			},
 			/**
 			 * @param {min}
@@ -534,6 +510,7 @@
 				return arr;
 			},
 			setMyPopup(i, name, list, dataitem = null, index) {
+				console.warn(i,name,list,dataitem,index,"==")
 				
 				this.doIndex(i)
 				dataitem = this.myValue[this.nowIndex]
@@ -737,6 +714,19 @@
 				//console.log('picker发送选择改变，通道携带值为', e.target.value)
 				this.myValue[this.nowIndex].objIndex = e.target.value
 				this.objIndex = e.target.value
+			},
+			bindPickerChangekuangxing(e) { 
+				const index = e.target.value;
+				// bankuang: "90.00"
+				// qiebian: "70.00"
+				// quankuang: "100.00"
+				// wukuang: "80.00"
+				const { quankuang,bankuang,wukuang,qiebian } = this.goodsDetail.machining_info;
+				const priceMap = [quankuang, bankuang, wukuang, qiebian];
+				this.jgPrice = priceMap[index];
+				this.getSumPrice();
+				this.jgMap[0].name = this.jgMap[0].list[index];
+				console.warn(this.goodsDetail.machining_info,'machining_info',this.jgPrice,"=====",this.jgMap[0].list[index])
 			},
 			show(type, callback) {
 				this.callback = callback;
@@ -1408,9 +1398,8 @@
 			},
 
 			//提交
-			confirm() {
-				//console.log(this.number);
-				// 删除待付款物流方式缓存
+		confirm() {
+				console.warn("加工：",this.jgMap)
 				uni.removeStorageSync('delivery');
 				if (this.preview) {
 					this.$util.showToast({
@@ -1418,15 +1407,6 @@
 					});
 					return;
 				}
-				//判断
-				// this.photometric =photometric
-				// ball_mirrorIndex:null,
-				// cylinder_mirrorIndex:null,
-				// axisIndex:null,
-				// ball_mirrorArray:[],
-				// cylinder_mirrorArray:[],
-				// axisArray:[],
-
 				//检查数据是否填完
 				if (!this.checkParam()) return;
 
@@ -1522,11 +1502,12 @@
 							sku_id: e.sku_id
 						})
 					})
+					console.error(LensParam,"lensParam")
 					//console.log(LensParam, "111")
 					// 加入购物车
 					if (this.type == 'join_cart') this.postJoinCart(LensParam)
 					//立即购买
-					if (this.type == 'buy_now') this.postBuyNow();
+					if (this.type == 'buy_now') this.postBuyNow(LensParam);
 					//秒杀
 					if (this.type == 'seckill') this.postSeckill();
 					// 拼团
@@ -1548,7 +1529,7 @@
 					//清空状态
 					this.myValue = []
 					this.getClickGoodsAdd()
-					console.error(this.goodsDetail.rimless,"rimless")
+					console.error(this.goodsDetail,"rimless",this.myValue)
 					if (this.goodsDetail.rimless == 1) {
 						this.rimless = this.goodsDetail.rimless
 						this.getClickGoodsAdd({}, 1)
@@ -1658,8 +1639,8 @@
 					}
 				});
 			},
-			postBuyNow() {
-				var data = {
+			postBuyNow(lensParam) {
+				let data = {
 					sku_id: this.skuId,
 					num: this.number,
 					ball_mirror: this.ball_mirrorIndex != null ? this.ball_mirrorArray[this
@@ -1667,12 +1648,29 @@
 					cylinder_mirror: this.cylinder_mirrorIndex != null ? this.cylinder_mirrorArray[this
 						.cylinder_mirrorIndex] : 0,
 					axis: this.axisIndex != null ? this.axisArray[this.axisIndex] : 0,
+					remarks: "",
+					list: JSON.stringify(lensParam),
+					//请求加工接口所需参数
+					machining_order: this.isMachining?1:0,//0不加工1加工
+					box_type: this.jgMap[0].name || "",//框型文字
+					//瞳距瞳高
+					machining_pupil: {
+						left: {
+							distance: this.jgMap[1].name || "",//瞳距
+							height: this.jgMap[2].name || "",//瞳高
+						},
+						right: {
+							distance: this.jgMap[3].name || "",//瞳距
+							height: this.jgMap[4].name || "",//瞳高
+						}
+					},
+					machining_money:this.jgPrice//加工费
 					// add和通道数据
 					// a_dd_data:this.AarrySum != null ? this.AarrySum[this.AarrySum] : 0,
 					// passage_data:this.AarryObj != null ? this.AarryObj[this.AarryObj] : 0,
 
 				};
-
+				console.warn(data,"data===")
 				uni.setStorage({
 					key: 'orderCreateData',
 					data: data,
@@ -1884,6 +1882,9 @@
 	};
 </script>
 <style lang="scss">
+	switch{
+		transform: scale(.7);
+	}
 	.remove-sku {
 		// text-align: center;
 		font-weight: bold;
@@ -2015,8 +2016,8 @@
 	}
 
 	.sku-layer .body-item {
-		display: flex;
-		flex-direction: column;
+		// display: flex;
+		// flex-direction: column;
 		justify-content: space-between;
 		padding: 0 30rpx;
 		height: calc(100% - 450rpx);

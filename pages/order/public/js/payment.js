@@ -413,11 +413,9 @@ export default {
 				if (pay_password) this.orderCreateData.pay_password = pay_password;
 
 				var data = this.$util.deepClone(this.orderCreateData);
-				data.delivery = JSON.stringify(data.delivery);
-				data.coupon = JSON.stringify(data.coupon);
-				data.invoice = JSON.stringify(data.invoice);
-				data.member_address = JSON.stringify(data.member_address);
-				data.buyer_message = JSON.stringify(data.buyer_message);
+				for (let key in data){
+					if (typeof data[key] == 'object') data[key] = JSON.stringify(data[key]);
+				}
 				this.$api.sendRequest({
 					url: '/api/ordercreate/create',
 					data,

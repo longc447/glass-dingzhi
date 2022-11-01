@@ -83,9 +83,6 @@
             <view class="follow-and-share" v-if="preview == 0">
               <text class="follow iconfont iconfenxiang2" @click="openSharePopup()"></text>
               <text class="share iconfont" @click="editCollection()" :class="whetherCollection == 1 ? 'iconlikefill color-base-text' : 'iconguanzhu1'"></text>
-              <!-- <text class="fenxiao color-base-text" v-if="showFenxiao != 0 && levelInfo.words_account && levelInfo.commission_money > 0">
-								返￥{{ levelInfo.commission_money }}
-							</text> -->
             </view>
           </view>
           <view class="goods-module-wrap info">
@@ -96,7 +93,6 @@
                 <text v-if="goodsSkuDetail.is_free_shipping">快递 包邮</text>
                 <text v-else>快递 买家承担</text>
               </block>
-              <!-- text>销量 {{ goodsSkuDetail.sale_num }} {{ goodsSkuDetail.unit }}</text> -->
             </view>
           </view>
         </view>
@@ -546,18 +542,12 @@
     <!-- 商品底部导航 -->
     <ns-goods-action :safeArea="isIphoneX" :isiPhone="isiPhone12">
       <template v-if="goodsSkuDetail.goods_state == 1 && goodsSkuDetail.verify_state == 1">
-        <!-- <ns-goods-action-icon text="店铺" icon="iconshouye11" @click="goHome" /> -->
         <ns-goods-action-icon text="客服" icon="iconkefu11" @click="goConnect" v-if="kefuConfig.type == 'system' && showKefu == 1" />
         <ns-goods-action-icon text="购物车" icon="icongouwuche21" :corner-mark="cartCount > 0 ? cartCount + '' : ''" @click="goCart" />
-        <block v-if="goodsSkuDetail.stock == 0 && !goodsSkuDetail.sku_spec_format">
-          <ns-goods-action-button class="goods-action-button active3" disabled-text="库存不足" :disabled="true" />
-          <!-- <ns-goods-action-button v-if="goodsSkuDetail.sku_spec_format" class="goods-action-button active3" disabled-text="库存不足" :disabled="true" @click="joinCart" /> -->
-          <!-- <ns-goods-action-button v-else class="goods-action-button active3" disabled-text="库存不足" :disabled="true" /> -->
-        </block>
+        <block v-if="goodsSkuDetail.stock == 0 && !goodsSkuDetail.sku_spec_format"><ns-goods-action-button class="goods-action-button active3" disabled-text="库存不足" :disabled="true" /></block>
         <block v-else-if="goodsSkuDetail.max_buy != 0 && goodsSkuDetail.purchased_num >= goodsSkuDetail.max_buy">
           <ns-goods-action-button class="goods-action-button active3" disabled-text="已达最大限购数量" :disabled="true" />
         </block>
-
         <block v-else-if="is_wholesaler == 3">
           <ns-goods-action-button
             :class="['goods-action-button', isiPhone12 ? 'iPhone12' : '', goodsSkuDetail.is_virtual == 0 ? 'active1' : '']"
@@ -567,14 +557,14 @@
             v-if="goodsSkuDetail.is_virtual == 0 && goodsSkuDetail.photometric == 0 && goodsSkuDetail.luminosity_status != 1"
           />
           <ns-goods-action-button
-            :class="['goods-action-button', isiPhone12 ? 'iPhone12' : '', goodsSkuDetail.is_virtual == 0 ? 'active2' : 'active4']"
+            :class="['goods-action-button', isiPhone12 ? 'iPhone12' : '',jgShow(true)?'joinCartBtn':'', goodsSkuDetail.is_virtual == 0 ? 'active2' : 'active4']"
             text="立即购买"
             @click="buyNow"
-            v-if="goodsSkuDetail.photometric == 0 && goodsSkuDetail.luminosity_status != 1"
+            v-if="jgShow(true, goodsSkuDetail.photometric == 0 && goodsSkuDetail.luminosity_status != 1)"
           />
 
           <view
-            v-if="goodsSkuDetail.photometric != 0 || goodsSkuDetail.luminosity_status == 1"
+            v-if="jgShow(false, goodsSkuDetail.photometric != 0 || goodsSkuDetail.luminosity_status == 1)"
             class="joinCartBtn"
             style="display: flex;flex: 1;background: #FFB644;color: #FFFFFF;border-radius: 999rpx;
 					 margin: 0 20rpx;justify-content: center;align-items: center;padding: 10rpx 0;"
@@ -638,6 +628,9 @@ export default {
     };
   },
   async onLoad() {
+    // test
+    this.joinCart();
+    //
     let _this = this;
     uni.getSystemInfo({
       success(res) {
@@ -693,6 +686,14 @@ export default {
     };
   },
   // #endif
+  methods: {
+    jgShow(isShow = true, bl = true) {
+      if (this.goodsSkuDetail.machining == 1) {
+        return isShow;
+      }
+      return bl;
+    },
+  },
 };
 </script>
 <style lang="scss">
