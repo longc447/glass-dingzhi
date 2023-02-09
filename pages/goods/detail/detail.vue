@@ -557,7 +557,7 @@
             v-if="goodsSkuDetail.is_virtual == 0 && goodsSkuDetail.photometric == 0 && goodsSkuDetail.luminosity_status != 1"
           />
           <ns-goods-action-button
-            :class="['goods-action-button', isiPhone12 ? 'iPhone12' : '',jgShow(true)?'joinCartBtn':'', goodsSkuDetail.is_virtual == 0 ? 'active2' : 'active4']"
+            :class="['goods-action-button', isiPhone12 ? 'iPhone12' : '', jgShow(true) ? 'joinCartBtn' : '', goodsSkuDetail.is_virtual == 0 ? 'active2' : 'active4']"
             text="立即购买"
             @click="buyNow"
             v-if="jgShow(true, goodsSkuDetail.photometric == 0 && goodsSkuDetail.luminosity_status != 1)"
@@ -629,7 +629,7 @@ export default {
   },
   async onLoad() {
     // test
-    this.joinCart();
+    // this.joinCart();
     //
     let _this = this;
     uni.getSystemInfo({

@@ -83,14 +83,22 @@
 
 					<view class="sku-close iconfont iconclose" @click="closeSkuPopup()"></view>
 				</view>
-				<view class="body-item">
-					<view v-if="goodsDetail.machining == 1">
-						是否加工 <switch :checked="isMachining" @change="isMachining = !isMachining"/>
-					</view>
-
+				<view class="body-item flex-row-center">
+          <view class="flex">
+            <view v-if="goodsDetail.machining == 1">
+            	是否加工 <switch :checked="isMachining" @change="isMachining = !isMachining"/>
+            </view>
+              	<view v-if="isMachining" class="flex flex-row-center" v-for="(item,index) in jgMap.filter((e,i)=>i==0)" :key="index" @click="handleClickSelectKuangxing(index)">
+              		<text class="title font-size-base">{{item.key}}</text> 
+              		<view class="picker-item" style="font-size: 3.5vw;margin: 0 20rpx 0;color: rgb(120, 120, 120);">
+              			<input type="text" v-model="jgMap[item.index].name" style="font-size: 3.5vw;color: rgb(120, 120, 120);" />
+              		</view>
+              	</view>
+          </view>
+					
 					<scroll-view :scroll-y="true" style="max-height: 920rpx;" :scroll-into-view="scrollto">
 						<view class="sku-list-wrap" v-for="(item, index) in goodsDetail.goods_spec_format" :key="index"
-							v-if="goodsDetail.luminosity_status != 1">
+							v-if="goodsDetail.luminosity_status != 1 || isMachining">
 							<text class="title font-size-base">{{ item.spec_name }}</text>
 							<view v-for="(item_value, index_value) in item.value" :key="index_value" :class="{
 									selected: item_value['selected'] || skuId == item_value.sku_id,
@@ -117,7 +125,7 @@
 									</view>
 								</view>
 								<view class="sku-list-wrap"
-									v-if="goodsDetail.photometric!=0|| goodsDetail.luminosity_status==1 ">
+									v-if="goodsDetail.photometric!=0|| goodsDetail.luminosity_status==1">
 									<view class="title font-size-base" style="text-align: center;">球镜</view>
 									<view class="picker-item" style="width: 80rpx;"
 										@click="setMyPopup(index,'ball',item.ball_mirrorArray)">
@@ -172,15 +180,42 @@
 									</view>
 								</view>
 								<view class="sku-list-wrap"
-									v-if="goodsDetail.photometric!=0|| goodsDetail.luminosity_status==1 ">
+									v-if="!isMachining&&(goodsDetail.photometric!=0|| goodsDetail.luminosity_status==1)"
+                  >
 									<text class="title font-size-base" style="text-align: center;">数量(片)</text>
 									<view class="picker-item">
 										<input type="number" v-model="item.product_num" @input="getSumPrice()"
 											style="font-size: 3.5vw;color: rgb(120,120,120);height: 45rpx;"></input>
 									</view>
-								</view>
+								</view> 
+                <!-- 
+                 
+                  加工 
+                 <view v-if="isMachining" class="jgBox">
+                 	<view v-for="(item,index) in jgMap" :class="item.class" :key="index" style="text-align:center" @click="handleClickSelectKuangxing(index)">
+                 		<view :class="[item.class+'-item' ,'sku-list-wrap','jg-item']" v-if=" goodsDetail.photometric!=0|| goodsDetail.luminosity_status==1 ">
+                 			<text class="title font-size-base">{{item.key}}</text> 
+                 			<view class="picker-item" style="font-size: 3.5vw;color: rgb(120, 120, 120);">
+                 				<input type="text" v-model="item.name" style="font-size: 3.5vw;color: rgb(120, 120, 120);" />
+                 			</view>
+                         <text v-if="index==1" class="leftTips">左眼(L):</text>
+                         <text v-if="index==3" class="leftTips">右眼(R):</text>
+                 		</view>
+                 	</view>
+                 </view>
+                 加工 end
+                 
+                 
+                 -->
+                <view class="sku-list-wrap" v-if="isMachining && (goodsDetail.photometric!=0|| goodsDetail.luminosity_status==1)" v-for="(jgItem,jgIndex) in jgMap.filter((e,i)=>index==0?i>0&&i<3:i>=3)" :key="jgItem.index">
+                      <view v-show="false">{{JSON.stringify(jgItem)}}</view>
+                  		<text class="title font-size-base">{{jgItem.key}}</text> 
+                  		<view class="picker-item" style="font-size: 3.5vw;color: rgb(120, 120, 120);">
+                  			<input type="text" :value="jgMap[jgItem.index].name" @change="(e)=>handleChangeJgValue(e,jgItem)" style="font-size: 3.5vw;color: rgb(120, 120, 120);" />
+                  		</view>
+                </view>
 								<view class="remove-sku" @click="removeTap(index)"
-									v-if="goodsDetail.rimless!=1&&(goodsDetail.photometric!=0|| goodsDetail.luminosity_status==1)">
+									v-if="!isMachining && goodsDetail.rimless!=1&&(goodsDetail.photometric!=0|| goodsDetail.luminosity_status==1)">
 									-
 
 								</view>
@@ -219,7 +254,7 @@
 
 
 						<view class="add-sku" @click="getClickGoodsAdd()" :id="scrollto"
-							v-if="goodsDetail.rimless != 1 && (goodsDetail.photometric != 0 || goodsDetail.luminosity_status == 1) ">
+							v-if="!isMachining && goodsDetail.rimless != 1 && (goodsDetail.photometric != 0 || goodsDetail.luminosity_status == 1)">
 							<text>新增</text>
 							<!-- #ifndef MP-->
 							<text v-show="false">{{rimless=goodsDetail.rimless}}</text>
@@ -228,18 +263,6 @@
 					</scroll-view>
 					<!-- <textarea placeholder="备注留言" class="remarkBox" v-model="buyer_message"></textarea> -->
 
-					<!-- 加工 -->
-					<view style="display: flex;justify-content: space-evenly;" v-if="isMachining">
-						<view v-for="(item,index) in jgMap" :key="index" style="text-align:center" @click="handleClickSelectKuangxing(index)">
-							<view class="sku-list-wrap" v-if=" goodsDetail.photometric!=0|| goodsDetail.luminosity_status==1 " style="display: flex;flex-direction: column;justify-content: center;align-items: center;">
-								<text class="title font-size-base">{{item.key}}</text> 
-								<view class="picker-item" style="font-size: 3.5vw;color: rgb(120, 120, 120);">
-									<input type="text" v-model="item.name" style="font-size: 3.5vw;color: rgb(120, 120, 120);" />
-								</view>
-							</view>
-						</view>
-					</view>
-					<!-- 加工 end -->
 				</view>
 				<block v-if="type == 'wholesale_buy_now' || type == 'wholesale_join_cart'">
 					<view class="footer" @click="confirm()">
@@ -312,27 +335,36 @@
 					key:"框型",
 					val:"",
 					name: '',
-					list:["全框", "半框", "无框", "切边"]
+					list:["全框", "半框", "无框", "切边"],
+          index:0,
 				},{
-					key:"瞳距（左）",
+					key:"瞳距(R)",//（右）
 					val:"",
 					name: "",
-					list:[]
+					list:[],
+          class:'right',
+          index:1
 				},{
-					key:"瞳高（左）",
+					key:"瞳高(R)",//（右）
 					val: "",
 					name: '',
-					list:[]
+					list:[],
+          class:'right',
+          index:2
 				},{
-					key:"瞳距（右）",
+					key:"瞳距(L)",//（左）
 					val:"",
 					name: "",
-					list:[]
+					list:[],
+          class:'left',
+          index:3,
 				},{
-					key:"瞳高（右）",
+					key:"瞳高(L)",//（左）
 					val: "",
 					name: '',
-					list:[]
+					list:[],
+          class:'left',
+          index:4
 				}],//加工 功能
 				rimless: '',
 				scrollto: 'addbtn0',
@@ -377,11 +409,11 @@
 			};
 		},
 		mounted() {
-			console.log(this.goodsDetail.sku_spec_format,"多规格")
 			this.isIphoneX = this.$util.uniappIsIPhoneX();
 			this.systemInfo = uni.getSystemInfoSync();
 			this.getWholesale(this.goodsDetail);
 			if (this.goodsDetail.goods_id == 0) this.$emit("error")
+      // if(this.isMachining) this.type = 'buy_now';
 		},
 		watch: {
 			pointLimit(newNum, oldNum) {
@@ -393,7 +425,18 @@
 					this.rimless = this.goodsDetail.rimless
 					this.getClickGoodsAdd({}, 1)
 				}
+     //    if(this.goodsDetail.machining == 1){
+					// this.getClickGoodsAdd({}, 1)
+     //    }
 			},
+      isMachining(newData, oldData){
+        this.myValue = [];
+        	this.getClickGoodsAdd({}, 0);
+        	this.getClickGoodsAdd({}, 1);
+        //    if(this.goodsDetail.machining == 1){
+        					// this.getClickGoodsAdd({}, 1)
+        //    }
+      },
 			minBuy(newData, oldData) {
 				if (this.minBuy > 1) {
 					this.number = Number(this.minBuy);
@@ -401,13 +444,15 @@
 			}
 		},
 	methods: {
+    handleChangeJgValue(e,item){
+      this.jgMap[item.index].name = e.target.value;
+    },
 			handleClickSelectKuangxing(index) {
 				const data = this.jgMap[index].list;
 				if (data.length > 0) {
 					this.$refs.kuangxing.list = data;
 					this.$refs.kuangxing.open()
 				}
-				console.log("选择框型",this.goodsDetail.machining_info)
 			},
 			goodsDetailChange(newData, oldData) {
 				this.skuId = newData.sku_id;
@@ -500,7 +545,6 @@
 					s = 0.25
 				for (let i = min; i <= max; i += s) {
 					s = i < this.goodsDetail.step && this.goodsDetail.step != 0 ? 0.5 : 0.25
-					//console.log(`min=${min},max=${max},s=${s},step=${this.goodsDetail.step},i=${i}`)
 					let num = i > 0 ? '+' + i : i < 0 ? i : i
 					num = parseFloat(num).toFixed(2)
 					if (num > 0) num = `+${num}`
@@ -510,7 +554,6 @@
 				return arr;
 			},
 			setMyPopup(i, name, list, dataitem = null, index) {
-				console.warn(i,name,list,dataitem,index,"==")
 				
 				this.doIndex(i)
 				dataitem = this.myValue[this.nowIndex]
@@ -1399,7 +1442,7 @@
 
 			//提交
 		confirm() {
-				console.warn("加工：",this.jgMap)
+        console.log(this.type,"type")
 				uni.removeStorageSync('delivery');
 				if (this.preview) {
 					this.$util.showToast({
@@ -1504,6 +1547,7 @@
 					})
 					console.error(LensParam,"lensParam")
 					//console.log(LensParam, "111")
+          this.type = this.isMachining ? 'buy_now' : 'join_cart';
 					// 加入购物车
 					if (this.type == 'join_cart') this.postJoinCart(LensParam)
 					//立即购买
@@ -1534,6 +1578,9 @@
 						this.rimless = this.goodsDetail.rimless
 						this.getClickGoodsAdd({}, 1)
 					}
+          if(this.goodsDetail.isMachining){
+          	this.getClickGoodsAdd({}, 1)
+          }
 				});
 			},
 			/** 
@@ -1541,7 +1588,7 @@
 			 * */
 			checkParam() {
 				let ispost = true;
-
+        
 				if (this.goodsDetail.photometric != 0 || this.goodsDetail.luminosity_status == 1) { //this.photometric != 0
 					this.myValue.forEach(e => {
 						if (e.ball_mirrorArray[e.ball_mirrorIndex] == undefined) {
@@ -1558,7 +1605,6 @@
 							ispost = false;
 							return;
 						}
-
 						// 						if ( !e.axisValue) {//e.axisIndex == undefined ||
 						// 							this.$util.showToast({
 						// 								title: '请输入轴位'
@@ -1591,9 +1637,28 @@
 
 					})
 				}
-				return ispost
+	
+  
+  console.log(this.isMachining,"ismaching")
+          if(this.isMachining){
+            let tipsMap = ['请选择加工方式','请输入右瞳距','请输入右瞳高','请输入左瞳距','请输入左瞳高']
+            this.jgMap.forEach((e,i)=>{
+              if(!e.name){
+              console.log(e.name,"e.name")
+                this.$util.showToast({
+                	title: tipsMap[i]
+                });
+                ispost = false;
+                return;
+              }
+            })
+          }
+          
+          
+        return ispost
 			},
 			postJoinCart(LensParam) {
+        if(this.isMachining) return this.postBuyNow(LensParam);
 				let number = this.number;
 				let param = this.goodsDetail.photometric != 0 || this.goodsDetail.luminosity_status == 1 ? { //镜片
 					sku_id: this.skuId,
@@ -1640,6 +1705,14 @@
 				});
 			},
 			postBuyNow(lensParam) {
+        if (this.isMachining){
+          lensParam = lensParam.map(e=>{
+            return {
+              ...e,
+              sku_id:this.skuId
+            }
+          })
+        }
 				let data = {
 					sku_id: this.skuId,
 					num: this.number,
@@ -1654,16 +1727,16 @@
 					machining_order: this.isMachining?1:0,//0不加工1加工
 					box_type: this.jgMap[0].name || "",//框型文字
 					//瞳距瞳高
-					machining_pupil: {
-						left: {
+					machining_pupil: JSON.stringify({
+						right: {
 							distance: this.jgMap[1].name || "",//瞳距
 							height: this.jgMap[2].name || "",//瞳高
 						},
-						right: {
+						left: {
 							distance: this.jgMap[3].name || "",//瞳距
 							height: this.jgMap[4].name || "",//瞳高
 						}
-					},
+					}),
 					machining_money:this.jgPrice//加工费
 					// add和通道数据
 					// a_dd_data:this.AarrySum != null ? this.AarrySum[this.AarrySum] : 0,
@@ -1671,6 +1744,7 @@
 
 				};
 				console.warn(data,"data===")
+        debugger
 				uni.setStorage({
 					key: 'orderCreateData',
 					data: data,
@@ -1885,6 +1959,25 @@
 	switch{
 		transform: scale(.7);
 	}
+  .jgBox{
+    display: flex;
+    flex-direction: column;
+    
+    .jgContent{
+      display: flex;
+      flex-direction: column;
+      
+      .jgRow{
+        margin-top: 20rpx;
+        display: flex;
+        align-items: flex-end;
+        view{
+          margin-left: 20rpx;
+          text-align: center;
+        }
+      }
+    }
+  }
 	.remove-sku {
 		// text-align: center;
 		font-weight: bold;
@@ -2162,9 +2255,20 @@
 	.wrap-sph {
 		padding-bottom: 20rpx;
 		width: 100%;
-		display: flex;
-		justify-content: space-around;
-		font-size: 14rpx;
+        display: grid;
+        grid-template-columns: repeat(auto-fill,110rpx);
+        grid-gap: 7rpx;
+		// display: flex;
+		// justify-content: space-around;
+		// font-size: 14rpx;
+  //   flex-wrap: wrap;
+    .sku-list-wrap{
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      // flex:1;
+      // min-width: 90rpx;
+    }
 	}
 
 	.picker-item {
