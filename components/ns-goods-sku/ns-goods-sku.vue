@@ -267,14 +267,16 @@
 				<block v-if="type == 'wholesale_buy_now' || type == 'wholesale_join_cart'">
 					<view class="footer" @click="confirm()">
 						<!-- <button type="primary" v-if="type == 'wholesale_join_cart' && goodsDetail.stock >= number && number >= minNumber">加入进货单</button> -->
-						<button type="primary">确定</button>
+						<button type="primary" v-if="goodsDetail.rimless == 1" style="background-color: #ffb644;" @click="changeTableOrder">切换二维表录入</button>
+						<button type="primary" @click="confirm()">确认光度</button>
 						<!-- <button type="primary" v-else disabled="true">库存不足</button> -->
 					</view>
 				</block>
 				<block v-else>
 					<view class="footer" @click="confirm()">
 						<!-- <button type="primary" v-if="type == 'wholesale_join_cart' && goodsDetail.stock >= number && number >= minNumber">加入进货单</button> -->
-						<button type="primary">确定</button>
+						<button type="primary"  v-if="goodsDetail.rimless == 1"  style="background-color: #ffb644;"  @click="changeTableOrder">切换二维表录入</button>
+						<button type="primary" @click="confirm()">确认光度</button>
 						<!-- <button type="primary" v-else disabled="true">库存不足</button> -->
 					</view>
 				</block>
@@ -444,6 +446,9 @@
 			}
 		},
 	methods: {
+			changeTableOrder() { 
+				this.$emit('changeTableOrder')
+			},
     handleChangeJgValue(e,item){
       this.jgMap[item.index].name = e.target.value;
     },
