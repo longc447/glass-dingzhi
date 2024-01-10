@@ -9,7 +9,7 @@
 /**
  * 镜片一站式采购平台
  */
-const API_SERVER = "https://sanfan.tongzhounetwork.ltd"
+const API_SERVER = "https://tianchen.tongzhounetwork.ltd"
 const x = {
   baseUrl: API_SERVER,
   imgDomain: API_SERVER,

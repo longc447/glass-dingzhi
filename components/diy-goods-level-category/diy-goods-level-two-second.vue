@@ -268,19 +268,19 @@
   @import '@/components/diy-goods-level-category/diy-goods-level-category.scss';
 
   .twoScroll-list {
-    padding: 0 34rpx;
+    // padding: 0 34rpx;
     overflow: hidden;
 
     .twoScroll-item {
-      margin: 0 60rpx 40rpx 0;
-      width: 114rpx;
+      margin:  1rpx ;
+      width: 158rpx;
       display: inline-block;
       text-align: center;
       line-height: 1;
 
       .twoScroll-item-image {
-        width: 114rpx;
-        height: 114rpx;
+        width: 140rpx;
+        height: 140rpx;
         margin-bottom: 20rpx;
       }
 
